@@ -5,31 +5,232 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Acknowledgements Generator</title>
     <script>
-        function generateAcknowledgement() {
-            const checkbox = document.getElementById('qutCheckbox');
+        // Function to generate the acknowledgment sentence
+        function updateAcknowledgement() {
+            const grantLines = [
+                { initials: document.getElementById('grantInitials1'), name: document.getElementById('grantName1'), code: document.getElementById('grantCode1') },
+                { initials: document.getElementById('grantInitials2'), name: document.getElementById('grantName2'), code: document.getElementById('grantCode2') },
+                { initials: document.getElementById('grantInitials3'), name: document.getElementById('grantName3'), code: document.getElementById('grantCode3') },
+                { initials: document.getElementById('grantInitials4'), name: document.getElementById('grantName4'), code: document.getElementById('grantCode4') }
+            ];
+            const partnerInputs = [
+                document.getElementById('partnerInput1'),
+                document.getElementById('partnerInput2'),
+                document.getElementById('partnerInput3')
+            ];
+            const prefilledOrgs = Array.from(document.querySelectorAll('.org-checkbox:checked')).map(cb => cb.value);
+            const internalSupportChecks = [
+                { id: 'supportCheck1', label: 'QUT Research Engineering Facility' },
+                { id: 'supportCheck2', label: 'QUT High Performance Computing' }
+            ].filter(check => document.getElementById(check.id).checked).map(check => check.label);
+            const customOrgInputs = [
+                document.getElementById('orgInput1'),
+                document.getElementById('orgInput2'),
+                document.getElementById('orgInput3')
+            ];
+            const emailInput = document.getElementById('emailInput');
             const output = document.getElementById('acknowledgementOutput');
-            
-            let sentence = "The authors acknowledge support from ";
-            
-            if (checkbox.checked) {
-                sentence += "the Queensland University of Technology (QUT) through the Centre for Robotics.";
-            } else {
-                sentence += "their respective institutions.";
+
+            let sentence = "";
+
+            // Collect all grant details into an array
+            const grantSentences = grantLines
+                .map(line => {
+                    if (line.initials.value.trim() || line.name.value.trim() || line.code.value.trim()) {
+                        return `from ${line.name.value.trim()} ${line.code.value.trim()} to ${line.initials.value.trim()}`.replace(/\s+/g, ' ').trim();
+                    }
+                    return null;
+                })
+                .filter(Boolean); // Remove null values
+
+            // Chain grant sentences into a single grammatically correct sentence
+            if (grantSentences.length > 0) {
+                const formattedGrants = grantSentences.length === 1
+                    ? `This work received funding ${grantSentences[0]}.`
+                    : `This work received funding ${grantSentences.slice(0, -1).join(", ")} and ${grantSentences[grantSentences.length - 1]}.`;
+                sentence += formattedGrants;
             }
-            
-            output.textContent = sentence;
+
+            // Collect industry/government partners
+            const partners = partnerInputs
+                .map(input => input.value.trim())
+                .filter(Boolean); // Remove empty entries
+
+            // Add partners to the sentence
+            if (partners.length > 0) {
+                const formattedPartners = partners.length === 1
+                    ? partners[0]
+                    : partners.slice(0, -1).join(", ") + " and " + partners[partners.length - 1];
+
+                if (sentence) sentence += " ";
+                sentence += `The work received support from ${formattedPartners}.`;
+            }
+
+            // Add internal support acknowledgment
+            if (internalSupportChecks.length > 0) {
+                const formattedSupport = internalSupportChecks.length === 1
+                    ? internalSupportChecks[0]
+                    : internalSupportChecks.slice(0, -1).join(", ") + " and " + internalSupportChecks[internalSupportChecks.length - 1];
+
+                if (sentence) sentence += " ";
+                sentence += `Internal support was provided by ${formattedSupport}.`;
+            }
+
+            // Combine custom organizations and prefilled organizations
+            const allOrgs = [...prefilledOrgs, ...customOrgInputs.map(input => input.value.trim()).filter(Boolean)];
+
+            // Add organization information
+            if (allOrgs.length > 0) {
+                const formattedOrgList = allOrgs.length === 1
+                    ? allOrgs[0]
+                    : allOrgs.slice(0, -1).join(", ") + " and " + allOrgs[allOrgs.length - 1];
+
+                if (sentence) sentence += " ";
+                sentence += `The authors are with the ${formattedOrgList}.`;
+
+                const emailText = emailInput.value.trim();
+                if (emailText) {
+                    sentence += ` Contact author email: ${emailText}.`;
+                }
+            }
+
+            // Display output or leave blank if no input
+            output.textContent = sentence || "";
         }
+
+        // Function to copy acknowledgment to clipboard
+        function copyAcknowledgement() {
+            const output = document.getElementById('acknowledgementOutput');
+            navigator.clipboard.writeText(output.textContent);
+        }
+
+        // Generate acknowledgment on page load
+        window.onload = updateAcknowledgement;
     </script>
 </head>
 <body>
     <h1>Acknowledgements Generator</h1>
-    <p>
+
+	<p>Enter the required details of grants, partners, internal support and organizational affiliations, and the acknowledgement text will be automatically generated.</p>
+	
+	<p>Some common checkboxes are provided</p>
+	
+	<p>Remember you can always edit the output text to get it just right.</p>
+
+    <!-- Grant Details Section -->
+    <h2>Grant Details</h2>
+    <div>
         <label>
-            <input type="checkbox" id="qutCheckbox">
-            Were you affiliated with QUT Centre for Robotics?
+            Grant 1: 
+            <input type="text" id="grantInitials1" placeholder="Initials (e.g., MM)" oninput="updateAcknowledgement()" size="15">
+            <input type="text" id="grantName1" placeholder="Grant Name (e.g., Laureate Fellowship)" oninput="updateAcknowledgement()" size="30">
+            <input type="text" id="grantCode1" placeholder="Grant Code (e.g., FL210100156)" oninput="updateAcknowledgement()">
         </label>
-    </p>
-    <button onclick="generateAcknowledgement()">Generate Acknowledgement</button>
+    </div>
+    <div>
+        <label>
+            Grant 2: 
+            <input type="text" id="grantInitials2" placeholder="Initials (e.g., AB)" oninput="updateAcknowledgement()" size="15">
+            <input type="text" id="grantName2" placeholder="Grant Name (e.g., Discovery Project)" oninput="updateAcknowledgement()" size="30">
+            <input type="text" id="grantCode2" placeholder="Grant Code (e.g., DP12345)" oninput="updateAcknowledgement()">
+        </label>
+    </div>
+    <div>
+        <label>
+            Grant 3: 
+            <input type="text" id="grantInitials3" placeholder="Initials (e.g., CD)" oninput="updateAcknowledgement()" size="15">
+            <input type="text" id="grantName3" placeholder="Grant Name (e.g., Future Fellowship)" oninput="updateAcknowledgement()" size="30">
+            <input type="text" id="grantCode3" placeholder="Grant Code (e.g., FT12345)" oninput="updateAcknowledgement()">
+        </label>
+    </div>
+    <div>
+        <label>
+            Grant 4: 
+            <input type="text" id="grantInitials4" placeholder="Initials (e.g., EF)" oninput="updateAcknowledgement()" size="15">
+            <input type="text" id="grantName4" placeholder="Grant Name (e.g., Linkage Project)" oninput="updateAcknowledgement()" size="30">
+            <input type="text" id="grantCode4" placeholder="Grant Code (e.g., LP12345)" oninput="updateAcknowledgement()">
+        </label>
+    </div>
+
+    <!-- Industry / Government Partners Section -->
+    <div style="margin-top: 15px;">
+        <h2>Industry / Government Partners</h2>
+        <div>
+            <label>
+                Partner 1:
+                <input type="text" id="partnerInput1" placeholder="Organization Name (e.g., Queensland Department of Transport and Main Roads)" size="80" oninput="updateAcknowledgement()">
+            </label>
+        </div>
+        <div>
+            <label>
+                Partner 2:
+                <input type="text" id="partnerInput2" placeholder="Organization Name (optional)" size="80" oninput="updateAcknowledgement()">
+            </label>
+        </div>
+        <div>
+            <label>
+                Partner 3:
+                <input type="text" id="partnerInput3" placeholder="Organization Name (optional)" size="80" oninput="updateAcknowledgement()">
+            </label>
+        </div>
+    </div>
+
+    <!-- Internal Support Section -->
+    <div style="margin-top: 15px;">
+        <h2>Internal Support</h2>
+        <div>
+            <label><input type="checkbox" id="supportCheck1" onchange="updateAcknowledgement()"> Work was supported by the Research Engineering Facility either through use of robots or staff help</label>
+        </div>
+        <div>
+            <label><input type="checkbox" id="supportCheck2" onchange="updateAcknowledgement()"> Work was supported by the QUT High Performance Compute facility</label>
+        </div>
+    </div>
+
+    <!-- Organization Section -->
+    <h2>Organizations</h2>
+    <div>
+        <label><input type="checkbox" class="org-checkbox" value="QUT Centre for Robotics, School of Electrical Engineering and Robotics, Queensland University of Technology, Brisbane, QLD 4000, Australia" onchange="updateAcknowledgement()" checked> QUT Centre for Robotics, School of Electrical Engineering and Robotics, Queensland University of Technology, Brisbane, QLD 4000, Australia</label>
+    </div>
+    <div>
+        <label><input type="checkbox" class="org-checkbox" value="Australian Cobotics Centre" onchange="updateAcknowledgement()"> Australian Cobotics Centre</label>
+    </div>
+    <div>
+        <label><input type="checkbox" class="org-checkbox" value="Australian Research Council (ARC) Industrial Transformation Training Centre for Automated Vehicles in Rural and Remote Regions (AVR3)" onchange="updateAcknowledgement()"> Australian Research Council (ARC) Industrial Transformation Training Centre for Automated Vehicles in Rural and Remote Regions (AVR3)</label>
+    </div>
+    <div>
+        <label><input type="checkbox" class="org-checkbox" value="ARC Australian Robotic Inspection and Asset Management Hub (ARIAM)" onchange="updateAcknowledgement()"> ARC Australian Robotic Inspection and Asset Management Hub (ARIAM)</label>
+    </div>
+    <div>
+        <label><input type="checkbox" class="org-checkbox" value="ARC ITTC for Joint Biomechanics" onchange="updateAcknowledgement()"> ARC ITTC for Joint Biomechanics</label>
+    </div>
+    <div style="margin-top: 15px;">
+        <label>
+            Custom Organization 1:
+            <input type="text" id="orgInput1" oninput="updateAcknowledgement()" size="150" placeholder="Custom Organization">
+        </label>
+    </div>
+    <div>
+        <label>
+            Custom Organization 2:
+            <input type="text" id="orgInput2" oninput="updateAcknowledgement()" size="150" placeholder="Custom Organization">
+        </label>
+    </div>
+    <div>
+        <label>
+            Custom Organization 3:
+            <input type="text" id="orgInput3" oninput="updateAcknowledgement()" size="150" placeholder="Custom Organization">
+        </label>
+    </div>
+    <div style="margin-top: 15px;">
+        <label>
+            Contact author email:
+            <input type="text" id="emailInput" placeholder="Enter Email" oninput="updateAcknowledgement()" size="80">
+        </label>
+    </div>
+
+    <!-- Output Section -->
     <p id="acknowledgementOutput" style="margin-top: 20px; font-weight: bold;"></p>
+	
+    <button onclick="copyAcknowledgement()" style="margin-top: 10px;">Copy Acknowledgement</button>	
 </body>
 </html>
