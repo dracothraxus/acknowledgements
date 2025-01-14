@@ -129,7 +129,7 @@
 <body>
     <h1>Acknowledgements Generator - Development and Testing Version</h1>	
 
-	<p><i>Credits: authored by Michael Milford with input from various parties.</i></p>	
+	<p><i>Credits: authored by Michael Milford (michael.milford@qut.edu.au) with input from various parties.</i></p>	
 		
 	<p class="nice-blue-text"><b>Instructions: </b>Enter the required details of grants, partners, internal support and organizational affiliations, and the acknowledgement text will be automatically generated.</p>
 	
@@ -222,7 +222,7 @@
     <!-- Organization Section -->
     <h2>Organizations</h2>
 	
-	<p class="nice-blue-text"><b>Instructions: </b>This is about organization units you are affiliated with. Organizations listed here will be included in a statement that says "The authors are with the <ORGANIZATION 1>, <ORGANIZATION 2> and <ORGANIZATION 3> - use this to indicate your primary affiliations. Enter custom organizations in the text boxes provided. If you want to note support from, rather than affilation with, a centre, put that under the "Industry / Government / Organization" heading.</p>
+	<p class="nice-blue-text"><b>Instructions: </b>This is about organization units you are affiliated with. Organizations listed here will be included in a statement that says "The authors are with the &ltORGANIZATION 1&gt, &ltORGANIZATION 2&gt and &ltORGANIZATION 3&gt - use this to indicate your primary affiliations. Enter custom organizations in the text boxes provided. If you want to note <b>support from, rather than affilation with</b>, a centre, put that under the "Industry / Government / Organization" heading above.</p>
 		
     <div>
         <label><input type="checkbox" class="org-checkbox" value="QUT Centre for Robotics, School of Electrical Engineering and Robotics, Queensland University of Technology, Brisbane, QLD 4000, Australia" onchange="updateAcknowledgement()" checked> QUT Centre for Robotics, School of Electrical Engineering and Robotics, Queensland University of Technology, Brisbane, QLD 4000, Australia</label>
@@ -268,7 +268,11 @@
     </div>
 
     <!-- Output Section -->
-    <div class="output-box" id="acknowledgementOutput"></div>
+	
+    <h2>Acknowledgement Text</h2>
+	
+	<div class="output-box" id="acknowledgementOutput"></div>
+	    
 
 <p class="nice-blue-text"><b>Instructions: </b>Hit the button to copy the acknowledgment to your clipboard - or you can manually select and copy the text.</p>
 
