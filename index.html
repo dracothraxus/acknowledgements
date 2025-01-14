@@ -6,6 +6,16 @@
     <title>Acknowledgements Generator</title>
 	
 	<style>
+		.output-box {
+        background-color: #D6EAF8; /* Light blue shade */
+        border: 2px solid #000;   /* Solid black border */
+        border-radius: 8px;       /* Rounded corners */
+        padding: 15px;            /* Spacing inside the box */
+        margin-top: 20px;         /* Space above the box */
+        font-family: Arial, sans-serif; /* Clean font */
+        font-size: 1rem;          /* Standard readable size */
+        line-height: 1.5;         /* Comfortable line spacing */
+    }
         .nice-blue-text {
             color: #0000FF; /* A pleasant blue color */            
             font-weight: 500; /* Medium font weight for emphasis */            
@@ -258,11 +268,11 @@
     </div>
 
     <!-- Output Section -->
-    <p id="acknowledgementOutput" style="margin-top: 20px; font-weight: bold;"></p>
+    <div class="output-box" id="acknowledgementOutput"></div>
+
+<p class="nice-blue-text"><b>Instructions: </b>Hit the button to copy the acknowledgment to your clipboard - or you can manually select and copy the text.</p>
+
+<button onclick="copyAcknowledgement()" style="margin-top: 10px;">Copy Acknowledgement</button>
 	
-	<p class="nice-blue-text"><b>Instructions: </b>Hit the button to copy the acknowledgement to your clipboard - or you can manually select and copy the text.</p>
-	
-    <button onclick="copyAcknowledgement()" style="margin-top: 10px;">Copy Acknowledgement</button>	
-		
 </body>
 </html>
