@@ -4,6 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Acknowledgements Generator</title>
+	
+	<style>
+        .nice-blue-text {
+            color: #0000FF; /* A pleasant blue color */            
+            font-weight: 500; /* Medium font weight for emphasis */            
+        }
+    </style>
+	
     <script>
         // Function to generate the acknowledgment sentence, testing
         function updateAcknowledgement() {
@@ -73,7 +81,7 @@
                     : internalSupportChecks.slice(0, -1).join(", ") + " and " + internalSupportChecks[internalSupportChecks.length - 1];
 
                 if (sentence) sentence += " ";
-                sentence += `Internal support was provided by ${formattedSupport}.`;
+                sentence += `This work was enabled by the ${formattedSupport}.`;
             }
 
             // Combine custom organizations and prefilled organizations
@@ -111,16 +119,21 @@
 <body>
     <h1>Acknowledgements Generator - Development and Testing Version</h1>	
 
-	<p>Enter the required details of grants, partners, internal support and organizational affiliations, and the acknowledgement text will be automatically generated.</p>
+	<p><i>Credits: authored by Michael Milford with input from various parties.</i></p>	
+		
+	<p class="nice-blue-text"><b>Instructions: </b>Enter the required details of grants, partners, internal support and organizational affiliations, and the acknowledgement text will be automatically generated.</p>
 	
-	<p>Some common checkboxes are provided</p>
+	<p class="nice-blue-text">Some common checkboxes are provided</p>
 	
-	<p>Remember you can always edit the output text to get it just right.</p>
+	<p class="nice-blue-text">Remember you can always edit the output text to get it just right.</p>
 	
-	<p>You may find that once you've got some standard acknowledgement text snippets you can just reuse them without needing to revisit this generator.</p>
+	<p class="nice-blue-text">You may find that once you've got some standard acknowledgement text snippets you can just reuse them without needing to revisit this generator.</p>
 
     <!-- Grant Details Section -->
     <h2>Grant Details</h2>
+	
+	<p class="nice-blue-text"><b>Instructions: </b>Enter grant/fellowship details including ID numbers where appropriate, and optionally the initials of the person the grant is awarded to.</p>
+	
     <div>
         <label>
             Grant 1: 
@@ -154,9 +167,13 @@
         </label>
     </div>
 
-    <!-- Industry / Government Partners Section -->
+    <!-- Industry / Government Partners Section -->	
+	
     <div style="margin-top: 15px;">
         <h2>Industry / Government Partners</h2>
+		
+		<p class="nice-blue-text"><b>Instructions: </b>Enter details of industry, government, not for profit or startup partners who supported this and/or worked with you on this research.</p>
+		
         <div>
             <label>
                 Partner 1:
@@ -180,6 +197,9 @@
     <!-- Internal Support Section -->
     <div style="margin-top: 15px;">
         <h2>Internal Support</h2>
+		
+		<p class="nice-blue-text"><b>Instructions: </b>Enter details internal organizational units that supported the research, like REF team and HPC.</p>
+		
         <div>
             <label><input type="checkbox" id="supportCheck1" onchange="updateAcknowledgement()"> Work was supported by the Research Engineering Facility either through use of robots or staff help</label>
         </div>
@@ -190,6 +210,9 @@
 
     <!-- Organization Section -->
     <h2>Organizations</h2>
+	
+	<p class="nice-blue-text"><b>Instructions: </b>This is about organization units you are affiliated with. Organizations listed here will be included in a statement that says "The authors are with the <ORGANIZATION 1>, <ORGANIZATION 2> and <ORGANIZATION 3> - use this to indicate your primary affiliations. Enter custom organizations in the text boxes provided.</p>
+		
     <div>
         <label><input type="checkbox" class="org-checkbox" value="QUT Centre for Robotics, School of Electrical Engineering and Robotics, Queensland University of Technology, Brisbane, QLD 4000, Australia" onchange="updateAcknowledgement()" checked> QUT Centre for Robotics, School of Electrical Engineering and Robotics, Queensland University of Technology, Brisbane, QLD 4000, Australia</label>
     </div>
@@ -224,6 +247,9 @@
         </label>
     </div>
     <div style="margin-top: 15px;">
+	
+	<p class="nice-blue-text"><b>Instructions: </b>Usually you provide the contact details for the corresponding author or researcher.</p>
+	
         <label>
             Contact author email:
             <input type="text" id="emailInput" placeholder="Enter Email" oninput="updateAcknowledgement()" size="80">
@@ -233,8 +259,9 @@
     <!-- Output Section -->
     <p id="acknowledgementOutput" style="margin-top: 20px; font-weight: bold;"></p>
 	
-    <button onclick="copyAcknowledgement()" style="margin-top: 10px;">Copy Acknowledgement</button>	
+	<p class="nice-blue-text"><b>Instructions: </b>Hit the button to copy the acknowledgement to your clipboard - or you can manually select and copy the text.</p>
 	
-	<p><i>Credits: authored by Michael Milford with input from various parties.</i></p>
+    <button onclick="copyAcknowledgement()" style="margin-top: 10px;">Copy Acknowledgement</button>	
+		
 </body>
 </html>
