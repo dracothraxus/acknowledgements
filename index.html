@@ -4,9 +4,32 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Acknowledgements Generator</title>
+    <script>
+        function generateAcknowledgement() {
+            const checkbox = document.getElementById('qutCheckbox');
+            const output = document.getElementById('acknowledgementOutput');
+            
+            let sentence = "The authors acknowledge support from ";
+            
+            if (checkbox.checked) {
+                sentence += "the Queensland University of Technology (QUT) through the Centre for Robotics.";
+            } else {
+                sentence += "their respective institutions.";
+            }
+            
+            output.textContent = sentence;
+        }
+    </script>
 </head>
 <body>
     <h1>Acknowledgements Generator</h1>
-    <p>This is a simple test page for GitHub Pages.</p>
+    <p>
+        <label>
+            <input type="checkbox" id="qutCheckbox">
+            Were you affiliated with QUT Centre for Robotics?
+        </label>
+    </p>
+    <button onclick="generateAcknowledgement()">Generate Acknowledgement</button>
+    <p id="acknowledgementOutput" style="margin-top: 20px; font-weight: bold;"></p>
 </body>
 </html>
