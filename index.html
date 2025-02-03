@@ -24,97 +24,86 @@
 	
     <script>
         // Function to generate the acknowledgment sentence, testing
-        function updateAcknowledgement() {
-            const grantLines = [
-                { initials: document.getElementById('grantInitials1'), name: document.getElementById('grantName1'), code: document.getElementById('grantCode1') },
-                { initials: document.getElementById('grantInitials2'), name: document.getElementById('grantName2'), code: document.getElementById('grantCode2') },
-                { initials: document.getElementById('grantInitials3'), name: document.getElementById('grantName3'), code: document.getElementById('grantCode3') },
-                { initials: document.getElementById('grantInitials4'), name: document.getElementById('grantName4'), code: document.getElementById('grantCode4') }
-            ];
-            const partnerInputs = [
-                document.getElementById('partnerInput1'),
-                document.getElementById('partnerInput2'),
-                document.getElementById('partnerInput3')
-            ];
-            const prefilledOrgs = Array.from(document.querySelectorAll('.org-checkbox:checked')).map(cb => cb.value);
-            const internalSupportChecks = [
-                { id: 'supportCheck1', label: 'QUT Research Engineering Facility' },
-                { id: 'supportCheck2', label: 'QUT High Performance Computing' }
-            ].filter(check => document.getElementById(check.id).checked).map(check => check.label);
-            const customOrgInputs = [
-                document.getElementById('orgInput1'),
-                document.getElementById('orgInput2'),
-                document.getElementById('orgInput3')
-            ];
-            const emailInput = document.getElementById('emailInput');
-            const output = document.getElementById('acknowledgementOutput');
-
-            let sentence = "";
-
-            // Collect all grant details into an array
-            const grantSentences = grantLines
-                .map(line => {
-                    if (line.initials.value.trim() || line.name.value.trim() || line.code.value.trim()) {
-                        return `from ${line.name.value.trim()} ${line.code.value.trim()} to ${line.initials.value.trim()}`.replace(/\s+/g, ' ').trim();
-                    }
-                    return null;
-                })
-                .filter(Boolean); // Remove null values
-
-            // Chain grant sentences into a single grammatically correct sentence
-            if (grantSentences.length > 0) {
-                const formattedGrants = grantSentences.length === 1
-                    ? `This work received funding ${grantSentences[0]}.`
-                    : `This work received funding ${grantSentences.slice(0, -1).join(", ")} and ${grantSentences[grantSentences.length - 1]}.`;
-                sentence += formattedGrants;
+		function updateAcknowledgement() {
+    const grantLines = [
+        { initials: document.getElementById('grantInitials1'), name: document.getElementById('grantName1'), code: document.getElementById('grantCode1') },
+        { initials: document.getElementById('grantInitials2'), name: document.getElementById('grantName2'), code: document.getElementById('grantCode2') },
+        { initials: document.getElementById('grantInitials3'), name: document.getElementById('grantName3'), code: document.getElementById('grantCode3') },
+        { initials: document.getElementById('grantInitials4'), name: document.getElementById('grantName4'), code: document.getElementById('grantCode4') }
+    ];
+    const partnerInputs = [
+        document.getElementById('partnerInput1'),
+        document.getElementById('partnerInput2'),
+        document.getElementById('partnerInput3')
+    ];
+    const prefilledOrgs = Array.from(document.querySelectorAll('.org-checkbox:checked')).map(cb => cb.value);
+    const internalSupportChecks = [
+        { id: 'supportCheck1', label: 'QUT Research Engineering Facility' },
+        { id: 'supportCheck2', label: 'QUT High Performance Computing' }
+    ].filter(check => document.getElementById(check.id).checked).map(check => check.label);
+    const customSupportInput = document.getElementById('customSupportInput').value.trim();
+    if (customSupportInput) {
+        internalSupportChecks.push(customSupportInput);
+    }
+    const customSchoolCheckbox = document.getElementById('customSchoolCheckbox');
+    const customSchoolInput = document.getElementById('customSchoolInput').value.trim();
+    let customSchoolText = "";
+    if (customSchoolCheckbox.checked && customSchoolInput) {
+        customSchoolText = `QUT Centre for Robotics and ${customSchoolInput}, Queensland University of Technology, Brisbane, QLD 4000, Australia`;
+    }
+    const customOrgInputs = [
+        document.getElementById('orgInput1'),
+        document.getElementById('orgInput2'),
+        document.getElementById('orgInput3')
+    ];
+    const emailInput = document.getElementById('emailInput');
+    const output = document.getElementById('acknowledgementOutput');
+    let sentence = "";
+    const grantSentences = grantLines
+        .map(line => {
+            if (line.initials.value.trim() || line.name.value.trim() || line.code.value.trim()) {
+                return `from ${line.name.value.trim()} ${line.code.value.trim()} to ${line.initials.value.trim()}`.replace(/\s+/g, ' ').trim();
             }
-
-            // Collect industry/government partners
-            const partners = partnerInputs
-                .map(input => input.value.trim())
-                .filter(Boolean); // Remove empty entries
-
-            // Add partners to the sentence
-            if (partners.length > 0) {
-                const formattedPartners = partners.length === 1
-                    ? partners[0]
-                    : partners.slice(0, -1).join(", ") + " and " + partners[partners.length - 1];
-
-                if (sentence) sentence += " ";
-                sentence += `The work received support from ${formattedPartners}.`;
-            }
-
-            // Add internal support acknowledgment
-            if (internalSupportChecks.length > 0) {
-                const formattedSupport = internalSupportChecks.length === 1
-                    ? internalSupportChecks[0]
-                    : internalSupportChecks.slice(0, -1).join(", ") + " and " + internalSupportChecks[internalSupportChecks.length - 1];
-
-                if (sentence) sentence += " ";
-                sentence += `This work was enabled by the ${formattedSupport}.`;
-            }
-
-            // Combine custom organizations and prefilled organizations
-            const allOrgs = [...prefilledOrgs, ...customOrgInputs.map(input => input.value.trim()).filter(Boolean)];
-
-            // Add organization information
-            if (allOrgs.length > 0) {
-                const formattedOrgList = allOrgs.length === 1
-                    ? allOrgs[0]
-                    : allOrgs.slice(0, -1).join(", ") + " and " + allOrgs[allOrgs.length - 1];
-
-                if (sentence) sentence += " ";
-                sentence += `The authors are with the ${formattedOrgList}.`;
-
-                const emailText = emailInput.value.trim();
-                if (emailText) {
-                    sentence += ` Contact author email: ${emailText}.`;
-                }
-            }
-
-            // Display output or leave blank if no input
-            output.textContent = sentence || "";
+            return null;
+        })
+        .filter(Boolean);
+    if (grantSentences.length > 0) {
+        const formattedGrants = grantSentences.length === 1
+            ? `This work received funding ${grantSentences[0]}.`
+            : `This work received funding ${grantSentences.slice(0, -1).join(", ")} and ${grantSentences[grantSentences.length - 1]}.`;
+        sentence += formattedGrants;
+    }
+    const partners = partnerInputs.map(input => input.value.trim()).filter(Boolean);
+    if (partners.length > 0) {
+        const formattedPartners = partners.length === 1
+            ? partners[0]
+            : partners.slice(0, -1).join(", ") + " and " + partners[partners.length - 1];
+        if (sentence) sentence += " ";
+        sentence += `The work received support from ${formattedPartners}.`;
+    }
+    if (internalSupportChecks.length > 0) {
+        const formattedSupport = internalSupportChecks.length === 1
+            ? internalSupportChecks[0]
+            : internalSupportChecks.slice(0, -1).join(", ") + " and " + internalSupportChecks[internalSupportChecks.length - 1];
+        if (sentence) sentence += " ";
+        sentence += `This work was enabled by the ${formattedSupport}.`;
+    }
+    const allOrgs = [...prefilledOrgs, customSchoolText, ...customOrgInputs.map(input => input.value.trim()).filter(Boolean)];
+    if (allOrgs.length > 0) {
+        const formattedOrgList = allOrgs.length === 1
+            ? allOrgs[0]
+            : allOrgs.slice(0, -1).join(", ") + " and " + allOrgs[allOrgs.length - 1];
+        if (sentence) sentence += " ";
+        sentence += `The authors are with the ${formattedOrgList}.`;
+        const emailText = emailInput.value.trim();
+        if (emailText) {
+            sentence += ` Contact author email: ${emailText}.`;
         }
+    }
+    output.textContent = sentence || "";
+}
+
+
 
         // Function to copy acknowledgment to clipboard
         function copyAcknowledgement() {
@@ -207,17 +196,23 @@
 
     <!-- Internal Support Section -->
     <div style="margin-top: 15px;">
-        <h2>Internal Support</h2>
-		
-		<p class="nice-blue-text"><b>Instructions: </b>Enter details internal organizational units that supported the research, like REF team and HPC.</p>
-		
-        <div>
-            <label><input type="checkbox" id="supportCheck1" onchange="updateAcknowledgement()"> Work was supported by the Research Engineering Facility either through use of robots or staff help</label>
-        </div>
-        <div>
-            <label><input type="checkbox" id="supportCheck2" onchange="updateAcknowledgement()"> Work was supported by the QUT High Performance Compute facility</label>
-        </div>
+    <h2>Internal Support</h2>
+    
+    <p class="nice-blue-text"><b>Instructions: </b>Enter details of internal organizational units that supported the research, like REF team and HPC.</p>
+    
+    <div>
+        <label><input type="checkbox" id="supportCheck1" onchange="updateAcknowledgement()"> Work was supported by the Research Engineering Facility either through use of robots or staff help</label>
     </div>
+    <div>
+        <label><input type="checkbox" id="supportCheck2" onchange="updateAcknowledgement()"> Work was supported by the QUT High Performance Compute facility</label>
+    </div>
+    <div style="margin-top: 10px;">
+        <label>
+            Custom internal support:
+            <input type="text" id="customSupportInput" oninput="updateAcknowledgement()" size="80" placeholder="Enter additional internal support">
+        </label>
+    </div>
+</div>
 
     <!-- Organization Section -->
     <h2>Organizations</h2>
@@ -227,6 +222,14 @@
     <div>
         <label><input type="checkbox" class="org-checkbox" value="QUT Centre for Robotics, School of Electrical Engineering and Robotics, Queensland University of Technology, Brisbane, QLD 4000, Australia" onchange="updateAcknowledgement()" checked> QUT Centre for Robotics, School of Electrical Engineering and Robotics, Queensland University of Technology, Brisbane, QLD 4000, Australia</label>
     </div>
+	
+	<div>
+    <label>
+        <input type="checkbox" id="customSchoolCheckbox" onchange="updateAcknowledgement()">
+        QUT Centre for Robotics, <input type="text" id="customSchoolInput" oninput="updateAcknowledgement()" size="50" maxlength="150" placeholder="Enter School Name">, Queensland University of Technology, Brisbane, QLD 4000, Australia
+    </label>
+</div>
+	
     <div>
         <label><input type="checkbox" class="org-checkbox" value="Australian Cobotics Centre" onchange="updateAcknowledgement()"> Australian Cobotics Centre</label>
     </div>
